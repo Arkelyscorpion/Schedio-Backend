@@ -1,1 +1,9 @@
 django
+djangorestframework
+attrs
+django-allauth
+django-cors-headers
+httpcore
+Jinja2
+psycopg2
+requests
