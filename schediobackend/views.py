@@ -1,17 +1,8 @@
 # Create your views here.
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.forms import inlineformset_factory
+from django.contrib.auth.decorators import login_required
 
-
-def loginPage(request):
-    context = {}
-    return render(request,'login.html',context)
-
-def registerPage(request):
-    context = {}
-    return render(request,'register.html',context)
-
+@login_required(login_url='login')
 def homePage(request):
     context = {}
     return render(request,'home.html')
