@@ -7,3 +7,4 @@ httpcore
 Jinja2
 psycopg2
 requests
+django_rest_knox

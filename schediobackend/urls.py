@@ -16,11 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import homePage
-from schedio.views import loginPage,registerPage,logoutUser
+from schedio import views
+from knox import views as knox_views
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('login/',loginPage,name='login'),
-    path('register/',registerPage,name='register'),
-    path('logout/',logoutUser,name='logout'),
-    path('',homePage,name='home'),
+    # path('login/',login_api,name='login'),
+    # path('register',registerPage.as_view(),name='register'),
+    # path('logout/',logoutUser,name='logout'),
+    path('user/', views.get_user,name='user'),
+    path('login/', views.login),
+    path('register/', views.register),
+    path('logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
+    path('logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall')
+    # path('',homePage,name='home'),
 ]
