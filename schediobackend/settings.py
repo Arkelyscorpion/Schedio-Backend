@@ -51,6 +51,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = "schediobackend.urls"
@@ -90,7 +92,7 @@ DATABASES = {
     'ENGINE' : 'django.db.backends.postgresql_psycopg2',
     'NAME' : 'Schedio',
     'USER' : 'postgres',
-    'PASSWORD' : 'admin',
+    'PASSWORD' : 'rishiyanth',
     'HOST' : 'localhost',
     'PORT' : '5432',
     }
@@ -142,3 +144,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES' : ('knox.auth.TokenAuthentication',)
 }
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOWED_ORIGINS=['http://localhost:4200']
