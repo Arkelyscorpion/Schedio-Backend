@@ -5,7 +5,7 @@ from rest_framework import serializers, validators
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "password", "email", "first_name", "last_name")
+        fields = ("username", "password", "email")
         extra_kwargs = {
             "password": {"write_only": True},
             "email": {
@@ -23,8 +23,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             username=validated_data["username"],
             email=validated_data["email"],
-            password=validated_data["password"],
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"]
+            password=validated_data["password"]
         )
         return user
