@@ -19,14 +19,10 @@ from .views import homePage
 from schedio import views
 from knox import views as knox_views
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    # path('login/',login_api,name='login'),
-    # path('register',registerPage.as_view(),name='register'),
-    # path('logout/',logoutUser,name='logout'),
+    path("admin/", admin.site.urls,name='admin'),
     path('user/', views.get_user,name='user'),
-    path('login/', views.login),
-    path('register/', views.register),
+    path('login/', views.login,name='login'),
+    path('register/', views.register,name='register'),
     path('logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
     path('logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall')
-    # path('',homePage,name='home'),
 ]
