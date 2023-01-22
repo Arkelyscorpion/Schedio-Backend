@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'schedio',
     'rest_framework',
     'corsheaders',
-    'knox'
+    'knox',
+    'phonenumber_field'
 ]
 
 MIDDLEWARE = [

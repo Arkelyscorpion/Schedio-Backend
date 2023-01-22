@@ -10,13 +10,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.auth import AuthToken
+from rest_framework import status
 from .forms import CreateUserForm
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.auth import AuthToken, TokenAuthentication
-from .serializers import RegisterSerializer
-
+from .serializers import RegisterSerializer, UserProfileSerializer
+from .models import UserProfile
 
 def serialize_user(user):
     return {
@@ -54,12 +55,10 @@ def register(request):
 @api_view(['GET'])
 def get_user(request):
     user = request.user
+    flag = False
     if user.is_authenticated:
-        return Response({
-            'id': user.id,
-            'username': user.username,
-        })
-    return Response({'error': 'error'})
+        flag = True
+    return Response({"user_exists" : flag},status=status.HTTP_200_OK)
 
 
 class registerPage(APIView):
@@ -95,3 +94,37 @@ class loginPage(APIView):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+
+class UserProfileView(APIView):
+    def post(self,request):
+            first_name = request.data["first_name"]
+            last_name = request.data["last_name"]
+            user_bio = request.data["user_bio"]
+            email = request.data["email"]
+            dob = request.data["dob"]
+            user_gender = request.data["user_gender"]
+            phone_numer = request.data["phone_number"]
+            country = request.data["country"]
+            profession = request.data["profession"]
+            organisation = request.data["organisation"]
+            user_profile_object = UserProfile(first_name=first_name,
+                last_name = last_name,
+                user_bio = user_bio,
+                email = email,
+                dob = dob,
+                user_gender = user_gender,
+                phone_number = phone_numer,
+                country = country,
+                profession = profession,
+                organisation = organisation,
+            )
+            # print(user_profile_object)
+            user_profile_object.save()
+            return Response(status=status.HTTP_200_OK)
+    
+    def get(self,reqeust):
+        id = reqeust.query_params["id"]
+        obj = UserProfile.objects.get(id = id)
+        serializer = UserProfileSerializer(obj)
+        return Response(serializer.data)
