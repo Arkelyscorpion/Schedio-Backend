@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers, validators
-from schedio.models import UserProfile
+from schedio.models import *
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,4 +33,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
+        fields = '__all__'
+
+class UserPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserPost
         fields = '__all__'
