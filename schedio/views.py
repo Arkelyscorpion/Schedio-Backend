@@ -42,7 +42,13 @@ def login(request):
     })
 
 # post - 3 endpoint
-# user profile - own,all, 3rd party
+# user profile - 3rd party
+
+@api_view(['GET'])
+def get_all_posts(request):
+    posts = UserPostSerializer(UserPost.objects.all(),many=True)
+    return JsonResponse(posts.data,safe=False,status=status.HTTP_200_OK)
+
 @api_view(['POST'])
 def register(request):
     serializer = RegisterSerializer(data=request.data)
@@ -53,6 +59,16 @@ def register(request):
             "user_info": serialize_user(user),
             "token": token
         })
+
+@api_view(['GET'])
+def get_my_posts(request):
+    user = request.user
+    if user.is_authenticated:
+        username = user.username
+        userid = UserProfileSerializer(UserProfile.objects.get(username=username))
+        userid = userid.data["id"]
+        posts = UserPostSerializer(UserPost.objects.all().filter(user_id = userid),many=True)
+        return JsonResponse(posts.data,safe=False)
 
 @api_view(['GET'])
 def get_all_details_user(request):
@@ -170,8 +186,8 @@ class UserProfileView(APIView):
 class UserPostView(APIView):
     def get(self, request):
         id = request.query_params["user_id"]
-        obj = UserPost.objects.get(user_id=id)
-        serializer = UserPostSerializer(obj)
+        obj = UserPost.objects.all().filter(user_id=id)
+        serializer = UserPostSerializer(obj,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
@@ -188,6 +204,7 @@ class UserPostView(APIView):
                                post_description=post_desc,
                                likes=likes)
         post_object.save()
+        #add time 
         return Response(status=status.HTTP_200_OK)
 
 
