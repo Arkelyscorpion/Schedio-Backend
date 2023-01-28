@@ -100,14 +100,16 @@ def logoutUser(request):
 
 class UserProfileView(APIView):
     def get(self, reqeust):
-        id = reqeust.query_params["id"]
-        obj = UserProfile.objects.get(id=id)
+        id = reqeust.query_params["username"]
+        obj = UserProfile.objects.get(username=id)
         serializer = UserProfileSerializer(obj)
         return Response(serializer.data)
 
     def post(self, request):
+        username = request.data["username"]
         first_name = request.data["first_name"]
         last_name = request.data["last_name"]
+        tech_stack = request.data["tech_stack"]
         user_bio = request.data["user_bio"]
         email = request.data["email"]
         dob = request.data["dob"]
@@ -117,8 +119,9 @@ class UserProfileView(APIView):
         profession = request.data["profession"]
         organisation = request.data["organisation"]
         profle_photo_url = request.data["profile_photo"]
-        user_profile_object = UserProfile(first_name=first_name,
-                                          last_name=last_name,
+        user_profile_object = UserProfile(username=username,
+                                        first_name=first_name,
+                                          last_name=last_name,tech_stack=tech_stack,
                                           user_bio=user_bio,
                                           email=email,
                                           dob=dob,
@@ -156,3 +159,7 @@ class UserPostView(APIView):
                                likes=likes)
         post_object.save()
         return Response(status=status.HTTP_200_OK)
+
+
+# class FollowUser(APIView):
+#     def 
