@@ -53,6 +53,14 @@ def register(request):
             "token": token
         })
 
+@api_view(['POST'])
+def update_profile(request):
+    serializer = UserProfileSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 @api_view(['GET'])
 def get_user(request):
@@ -62,6 +70,11 @@ def get_user(request):
         flag = True
     return Response({"user_exists": flag}, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def get_user_details(request):
+    user = request.user
+    if user.is_authenticated:
+        return JsonResponse({"username" : user.username},safe=False)
 
 class registerPage(APIView):
     def post(self, request):
