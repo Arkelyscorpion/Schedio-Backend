@@ -20,6 +20,9 @@ class UserProfile(models.Model):
     organisation = models.CharField(max_length=200,blank=True)
     followers = ArrayField(models.IntegerField(),default=list,blank=True)
 
+    def __str__(self):
+        return self.username
+
 class UserPost(models.Model):
     user_id = models.IntegerField()
     image_urls = ArrayField(models.URLField(blank=True),default=list)

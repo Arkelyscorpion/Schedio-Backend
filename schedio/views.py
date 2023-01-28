@@ -41,7 +41,8 @@ def login(request):
         'token': token
     })
 
-
+# post - 3 endpoint
+# user profile - own,all, 3rd party
 @api_view(['POST'])
 def register(request):
     serializer = RegisterSerializer(data=request.data)
@@ -52,6 +53,22 @@ def register(request):
             "user_info": serialize_user(user),
             "token": token
         })
+
+@api_view(['GET'])
+def get_all_details_user(request):
+    user = request.user
+    if user.is_authenticated:
+        username = user.username
+        print(username)
+        userObjec = UserProfile.objects.get(username=username)
+        userObjec = UserProfileSerializer(userObjec)
+        return JsonResponse(userObjec.data,safe=False)
+
+@api_view(['GET'])
+def get_all_users(request):
+    objects = UserProfile.objects.all()
+    jsondata = UserProfileSerializer(objects,many=True)
+    return JsonResponse(jsondata.data,safe=False,status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def update_profile(request):

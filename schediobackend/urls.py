@@ -27,7 +27,8 @@ urlpatterns = [
     path('logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
     path('user-profile/',views.update_profile),
     path('get-username/',views.get_user_details),
-
+    path('get-mydata/',views.get_all_details_user),
+    path('get-allusers/',views.get_all_users),
     # path('user-profile/',views.UserProfileView.as_view(),name='create_user_profile'),
     path('user-post/',views.UserPostView.as_view()),
 ]
