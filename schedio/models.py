@@ -29,5 +29,8 @@ class UserPost(models.Model):
     post_title = models.CharField(max_length=100)
     post_gist = models.CharField(max_length=250)
     post_description = models.TextField(max_length=3000)
-    likes = models.IntegerField()
+    likes = models.IntegerField(blank=True,null=True)
+    
+    def __str__(self): 
+        return self.post_title
 
