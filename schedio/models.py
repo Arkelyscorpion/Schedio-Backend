@@ -5,13 +5,13 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class UserProfile(models.Model):
-    username = models.CharField(max_length=60)
+    username = models.CharField(max_length=60,unique=True)
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=40)
     user_bio = models.TextField(max_length=500,blank=True)
     tech_stack = ArrayField(models.CharField(max_length=50),default=list)
     profile_photo = models.URLField(blank=True)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     dob = models.DateField()
     user_gender = models.CharField(max_length=40)
     phone_number = PhoneNumberField()

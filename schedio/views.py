@@ -41,7 +41,6 @@ def login(request):
         'token': token
     })
 
-# post - 3 endpoint
 # user profile - 3rd party
 
 @api_view(['GET'])
@@ -85,6 +84,15 @@ def get_all_users(request):
     objects = UserProfile.objects.all()
     jsondata = UserProfileSerializer(objects,many=True)
     return JsonResponse(jsondata.data,safe=False,status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def create_new_post(request):
+    serializer = UserPostSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 @api_view(['POST'])
 def update_profile(request):

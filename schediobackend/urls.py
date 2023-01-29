@@ -33,4 +33,5 @@ urlpatterns = [
     path('get-allposts/',views.get_all_posts),
     # path('user-profile/',views.UserProfileView.as_view(),name='create_user_profile'),
     path('user-post/',views.UserPostView.as_view()),
+    path('create-newpost/',views.create_new_post),
 ]
