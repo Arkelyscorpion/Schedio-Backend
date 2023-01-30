@@ -154,8 +154,8 @@ def logoutUser(request):
 
 class UserProfileView(APIView):
     def get(self, reqeust):
-        id = reqeust.query_params["username"]
-        obj = UserProfile.objects.get(username=id)
+        id = reqeust.query_params["user_id"]
+        obj = UserProfile.objects.get(id=id)    
         serializer = UserProfileSerializer(obj)
         return Response(serializer.data)
 

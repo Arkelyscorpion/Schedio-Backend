@@ -20,18 +20,19 @@ from schedio import views
 from knox import views as knox_views
 urlpatterns = [
     path("admin/", admin.site.urls,name='admin'),
-    path('user/', views.get_user,name='user'),
-    path('login/', views.login,name='login'),
-    path('register/', views.register,name='register'),
-    path('logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
-    path('logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
-    path('user-profile/',views.update_profile),
-    path('get-username/',views.get_user_details),
-    path('get-mydata/',views.get_all_details_user),
-    path('get-myposts/',views.get_my_posts),
-    path('get-allusers/',views.get_all_users),
-    path('get-allposts/',views.get_all_posts),
-    # path('user-profile/',views.UserProfileView.as_view(),name='create_user_profile'),
-    path('user-post/',views.UserPostView.as_view()),
-    path('create-newpost/',views.create_new_post),
+    path('user/exist/', views.get_user,name='user'),
+    path('user/login/', views.login,name='login'),
+    path('user/register/', views.register,name='register'),
+    path('user/logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
+    path('user/logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
+    path('user/createprofile/',views.update_profile),
+    path('user/myprofile/',views.get_all_details_user),
+    path('post/myposts/',views.get_my_posts),
+    path('user/all/',views.get_all_users),
+    path('post/all/',views.get_all_posts),
+    path('user/id/',views.UserProfileView.as_view(),name='create_user_profile'), # change dyn
+    path('post/userid/',views.UserPostView.as_view()), #create dyn
+    path('post/newpost/',views.create_new_post),
 ]
+
+# send post id to get post
