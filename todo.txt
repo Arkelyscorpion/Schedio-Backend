@@ -2,3 +2,7 @@ create endpoint to get single post from post id
 create dynamic endpoints for /id/
 send image links from https://picsum.photos/
 create followers functionality
+like a post, make sure like increases only once
+followers
+edit post
+edit profile

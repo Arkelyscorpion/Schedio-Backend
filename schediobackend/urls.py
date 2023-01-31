@@ -33,6 +33,8 @@ urlpatterns = [
     path('user/id/',views.UserProfileView.as_view(),name='create_user_profile'), # change dyn
     path('post/userid/',views.UserPostView.as_view()), #create dyn
     path('post/newpost/',views.create_new_post),
+    path('post/id/<int:pk>',views.UserPostDetailView),
+    path('user/id/<int:pk>',views.UserProfileDetailView)
 ]
 
 # send post id to get post

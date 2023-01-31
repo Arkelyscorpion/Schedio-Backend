@@ -19,7 +19,7 @@ from knox.auth import AuthToken, TokenAuthentication
 # from .serializers import RegisterSerializer, UserProfileSerializer
 from .serializers import *
 from .models import *
-
+from django.views.generic import (CreateView,DeleteView,ListView,UpdateView,DetailView)
 
 def serialize_user(user):
     return {
@@ -214,6 +214,18 @@ class UserPostView(APIView):
         post_object.save()
         #add time 
         return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def UserPostDetailView(request,pk):
+    queryset = UserPost.objects.all().filter(id=pk)
+    obj = UserPostSerializer(queryset,many=True)
+    return JsonResponse(obj.data,safe=False,status=200)
+
+@api_view(['GET'])
+def UserProfileDetailView(request,pk):
+    queryset = UserProfile.objects.get(id=pk)
+    obj = UserProfileSerializer(queryset)
+    return JsonResponse(obj.data,safe=False,status=200)
 
 
 # class FollowUser(APIView):
