@@ -20,9 +20,6 @@ from .serializers import *
 from .models import *
 from django.views.generic import (CreateView,DeleteView,ListView,UpdateView,DetailView)
 
-
-
-
 @api_view(['POST'])
 def register_user(request):
     serializer = RegisterSerializer(data=request.data)
@@ -132,6 +129,24 @@ def UserProfileDetailView(request,pk):
     obj = UserProfileSerializer(queryset)
     return JsonResponse(obj.data,safe=False,status=200)
 
+@api_view(['PUT'])
+def update_user_profile(request):
+    user = request.user
+    if user.is_authenticated:
+        serializer = UserProfileSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(status=202)
+        else:
+            return Response(status=406) 
+        
+# still changes have to be made
+
+@api_view(['DELETE'])
+def delete_post(request,id):
+    obj = UserPost.objects.get(id=id).delete()
+    return Response(status=200)
+    
 class registerPage(APIView):
     def post(self, request):
         username = request.data["username"]
@@ -204,8 +219,6 @@ class UserProfileView(APIView):
         # print(user_profile_object)
         user_profile_object.save()
         return Response(status=status.HTTP_200_OK)
-
-
 class UserPostView(APIView):
     def get(self, request):
         id = request.query_params["user_id"]
