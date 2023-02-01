@@ -25,13 +25,15 @@ class UserProfile(models.Model):
 
 class UserPost(models.Model):
     user_id = models.IntegerField()
-    image_urls = ArrayField(models.URLField(blank=True),default=list)
+    image_urls = ArrayField(models.URLField(blank=True),default=list(["https://picsum.photos/seed/picsum/800/600"]))
     post_title = models.CharField(max_length=100)
     post_gist = models.CharField(max_length=250)
     post_description = models.TextField(max_length=3000)
+    time_created = models.DateTimeField(auto_now=False,auto_now_add=True)
+    last_edit = models.DateTimeField(auto_now=True)
     likes = models.IntegerField(blank=True,null=True,default=0)
-    # default = 0
-    # time add
+    tech_stack = ArrayField(models.CharField(max_length=50),default=list)
+    
     def __str__(self): 
         return self.post_title
 

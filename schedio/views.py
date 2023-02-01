@@ -16,22 +16,27 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.auth import AuthToken, TokenAuthentication
-# from .serializers import RegisterSerializer, UserProfileSerializer
 from .serializers import *
 from .models import *
 from django.views.generic import (CreateView,DeleteView,ListView,UpdateView,DetailView)
 
-def serialize_user(user):
-    return {
-        "username": user.username,
-        "email": user.email,
-        "first_name": user.first_name,
-        "last_name": user.last_name
-    }
+
 
 
 @api_view(['POST'])
-def login(request):
+def register_user(request):
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        user = serializer.save()
+        _, token = AuthToken.objects.create(user)
+        return Response({
+            "user_info": serialize_user(user),
+            "token": token
+        })
+
+
+@api_view(['POST'])
+def login_user(request):
     serializer = AuthTokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = serializer.validated_data['user']
@@ -41,23 +46,32 @@ def login(request):
         'token': token
     })
 
-# user profile - 3rd party
-
 @api_view(['GET'])
-def get_all_posts(request):
-    posts = UserPostSerializer(UserPost.objects.all(),many=True)
-    return JsonResponse(posts.data,safe=False,status=status.HTTP_200_OK)
+def does_user_exist(request):
+    user = request.user
+    flag = False
+    if user.is_authenticated:
+        flag = True
+    return Response({"user_exists": flag}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-def register(request):
-    serializer = RegisterSerializer(data=request.data)
+def create_user_profile(request):
+    serializer = UserProfileSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
-        user = serializer.save()
-        _, token = AuthToken.objects.create(user)
-        return Response({
-            "user_info": serialize_user(user),
-            "token": token
-        })
+        serializer.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+@api_view(['GET'])
+def get_my_details(request):
+    user = request.user
+    if user.is_authenticated:
+        username = user.username
+        print(username)
+        userObjec = UserProfile.objects.get(username=username)
+        userObjec = UserProfileSerializer(userObjec)
+        return JsonResponse(userObjec.data,safe=False)
 
 @api_view(['GET'])
 def get_my_posts(request):
@@ -69,21 +83,17 @@ def get_my_posts(request):
         posts = UserPostSerializer(UserPost.objects.all().filter(user_id = userid),many=True)
         return JsonResponse(posts.data,safe=False)
 
-@api_view(['GET'])
-def get_all_details_user(request):
-    user = request.user
-    if user.is_authenticated:
-        username = user.username
-        print(username)
-        userObjec = UserProfile.objects.get(username=username)
-        userObjec = UserProfileSerializer(userObjec)
-        return JsonResponse(userObjec.data,safe=False)
 
 @api_view(['GET'])
 def get_all_users(request):
     objects = UserProfile.objects.all()
     jsondata = UserProfileSerializer(objects,many=True)
     return JsonResponse(jsondata.data,safe=False,status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_all_posts(request):
+    posts = UserPostSerializer(UserPost.objects.all(),many=True)
+    return JsonResponse(posts.data,safe=False,status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def create_new_post(request):
@@ -94,28 +104,33 @@ def create_new_post(request):
     else:
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
-@api_view(['POST'])
-def update_profile(request):
-    serializer = UserProfileSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        serializer.save()
-        return Response(status=status.HTTP_202_ACCEPTED)
-    else:
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+def serialize_user(user):
+    return {
+        "username": user.username,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name
+    }
+
 
 @api_view(['GET'])
-def get_user(request):
-    user = request.user
-    flag = False
-    if user.is_authenticated:
-        flag = True
-    return Response({"user_exists": flag}, status=status.HTTP_200_OK)
+def UserPostDetailView(request,pk):
+    queryset = UserPost.objects.all().filter(id=pk)
+    obj = UserPostSerializer(queryset,many=True)
+    return JsonResponse(obj.data,safe=False,status=200)
 
 @api_view(['GET'])
 def get_user_details(request):
     user = request.user
     if user.is_authenticated:
         return JsonResponse({"username" : user.username},safe=False)
+
+@api_view(['GET'])
+def UserProfileDetailView(request,pk):
+    queryset = UserProfile.objects.get(id=pk)
+    obj = UserProfileSerializer(queryset)
+    return JsonResponse(obj.data,safe=False,status=200)
 
 class registerPage(APIView):
     def post(self, request):
@@ -215,18 +230,4 @@ class UserPostView(APIView):
         #add time 
         return Response(status=status.HTTP_200_OK)
 
-@api_view(['GET'])
-def UserPostDetailView(request,pk):
-    queryset = UserPost.objects.all().filter(id=pk)
-    obj = UserPostSerializer(queryset,many=True)
-    return JsonResponse(obj.data,safe=False,status=200)
 
-@api_view(['GET'])
-def UserProfileDetailView(request,pk):
-    queryset = UserProfile.objects.get(id=pk)
-    obj = UserProfileSerializer(queryset)
-    return JsonResponse(obj.data,safe=False,status=200)
-
-
-# class FollowUser(APIView):
-#     def 

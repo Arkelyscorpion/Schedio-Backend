@@ -20,18 +20,18 @@ from schedio import views
 from knox import views as knox_views
 urlpatterns = [
     path("admin/", admin.site.urls,name='admin'),
-    path('user/exist/', views.get_user,name='user'),
-    path('user/login/', views.login,name='login'),
-    path('user/register/', views.register,name='register'),
+    path('user/register/', views.register_user,name='register'),
+    path('user/login/', views.login_user,name='login'),
+    path('user/exist/', views.does_user_exist,name='user'),
     path('user/logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
     path('user/logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
-    path('user/createprofile/',views.update_profile),
-    path('user/myprofile/',views.get_all_details_user),
+    path('user/createprofile/',views.create_user_profile),
+    path('user/myprofile/',views.get_my_details),
     path('post/myposts/',views.get_my_posts),
     path('user/all/',views.get_all_users),
     path('post/all/',views.get_all_posts),
-    path('user/id/',views.UserProfileView.as_view(),name='create_user_profile'), # change dyn
-    path('post/userid/',views.UserPostView.as_view()), #create dyn
+    # path('user/id/',views.UserProfileView.as_view(),name='create_user_profile'), # change dyn
+    # path('post/userid/',views.UserPostView.as_view()), #create dyn
     path('post/newpost/',views.create_new_post),
     path('post/id/<int:pk>',views.UserPostDetailView),
     path('user/id/<int:pk>',views.UserProfileDetailView)
