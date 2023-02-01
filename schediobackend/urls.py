@@ -37,6 +37,7 @@ urlpatterns = [
     path('user/id/<int:pk>',views.UserProfileDetailView),
     path('user/updateprofile',views.update_user_profile),
     path('post/delete/<int:id>',views.delete_post),
+    path('post/userid/<int:pk>',views.user_post),
     # path('post/upload',views.AzureUpload.as_view()),
 ]
 

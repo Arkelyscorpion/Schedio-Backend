@@ -118,6 +118,12 @@ def UserPostDetailView(request,pk):
     return JsonResponse(obj.data,safe=False,status=200)
 
 @api_view(['GET'])
+def user_post(request,pk):
+    queryset = UserPost.objects.filter(user_id = pk)
+    obj = UserPostSerializer(queryset,many =True)
+    return JsonResponse(obj.data,safe=False,status=200)
+
+@api_view(['GET'])
 def get_user_details(request):
     user = request.user
     if user.is_authenticated:
@@ -139,7 +145,7 @@ def update_user_profile(request):
             return Response(status=202)
         else:
             return Response(status=406) 
-        
+      
 # still changes have to be made
 
 @api_view(['DELETE'])
