@@ -28,6 +28,7 @@ urlpatterns = [
     path('user/createprofile/',views.create_user_profile),
     path('user/myprofile/',views.get_my_details),
     path('post/myposts/',views.get_my_posts),
+    path('user/getusername/',views.get_user_details),
     path('user/all/',views.get_all_users),
     path('post/all/',views.get_all_posts),
     # path('user/id/',views.UserProfileView.as_view(),name='create_user_profile'), # change dyn

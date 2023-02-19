@@ -66,6 +66,7 @@ def get_my_details(request):
     if user.is_authenticated:
         username = user.username
         print(username)
+        # userObjec = UserProfile.objects.all().filter(username = username)
         userObjec = UserProfile.objects.get(username=username)
         userObjec = UserProfileSerializer(userObjec)
         return JsonResponse(userObjec.data,safe=False)
