@@ -152,6 +152,15 @@ def update_user_profile(request):
 def delete_post(request,id):
     obj = UserPost.objects.get(id=id).delete()
     return Response(status=200)
+
+@api_view(['PATCH'])
+def like_post(request,pk):
+    post = UserPost.objects.get(id = pk)
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return Response(status=200)
     
 class registerPage(APIView):
     def post(self, request):

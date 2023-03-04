@@ -1,5 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
@@ -31,8 +32,11 @@ class UserPost(models.Model):
     post_description = models.TextField(max_length=3000)
     time_created = models.DateTimeField(auto_now=False,auto_now_add=True)
     last_edit = models.DateTimeField(auto_now=True)
-    likes = models.IntegerField(blank=True,null=True,default=0)
+    likes = models.ManyToManyField(User,related_name='post_like')
     tech_stack = ArrayField(models.CharField(max_length=50),default=list)
+    
+    def number_of_likes(self):
+        return self.likes.count()
     
     def __str__(self): 
         return self.post_title
