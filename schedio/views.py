@@ -154,7 +154,7 @@ def delete_post(request,id):
     obj = UserPost.objects.get(id=id).delete()
     return Response(status=200)
 
-@api_view(['PATCH'])
+@api_view(['GET'])
 def like_post(request,pk):
     post = UserPost.objects.get(id = pk)
     if post.likes.filter(id=request.user.id).exists():
