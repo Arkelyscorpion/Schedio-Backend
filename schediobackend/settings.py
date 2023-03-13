@@ -73,26 +73,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "schediobackend.wsgi.application"
 
-# DATABASES = {
-#     'default' : {
-#     'ENGINE' : 'django.db.backends.postgresql_psycopg2',
-#     'NAME' : DB_NAME,
-#     'USER' : DB_USER,
-#     'PASSWORD' : PGPASS,
-#     'HOST' : 'localhost',
-#     'PORT' : '5432',
-#     }
-# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'schedio',
-        'USER': 'schedio',
-        'PASSWORD': 'arkely@BE123',
-        'HOST': 'schedio-server.postgres.database.azure.com',
-        'PORT': '5432',
+    'default' : {
+    'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+    'NAME' : DB_NAME,
+    'USER' : DB_USER,
+    'PASSWORD' : PGPASS,
+    'HOST' : 'localhost',
+    'PORT' : '5432',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'schedio',
+#         'USER': 'schedio',
+#         'PASSWORD': 'arkely@BE123',
+#         'HOST': 'schedio-server.postgres.database.azure.com',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
