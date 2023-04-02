@@ -181,6 +181,14 @@ def get_userprofile_details(request,pk):
 def get_post_images(request,pk):
     images = ImageUrlSerializer(ImageUrlsForPost.objects.filter(post_id=pk),many=True)
     return JsonResponse(images.data,safe=False)
+
+@api_view(['GET'])
+def get_userinfo_from_token(request):
+    user = request.user
+    if user.is_authenticated:
+        userid = user.id
+        userobj = UserSerializer(User.objects.get(id=userid))
+        return JsonResponse(userobj.data,safe=False)
 class registerPage(APIView):
     def post(self, request):
         username = request.data["username"]

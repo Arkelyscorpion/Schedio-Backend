@@ -28,6 +28,7 @@ urlpatterns = [
     path('user/createprofile/',views.create_user_profile),
     path('user/myprofile/',views.get_my_details),
     path('user/<int:pk>',views.get_user_details),
+    path('user/info',views.get_userinfo_from_token),
     path('userprofile/<int:pk>',views.get_userprofile_details),
     path('post/myposts/',views.get_my_posts),
     path('user/getusername/',views.get_username),
