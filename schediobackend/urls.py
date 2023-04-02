@@ -27,8 +27,10 @@ urlpatterns = [
     path('user/logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
     path('user/createprofile/',views.create_user_profile),
     path('user/myprofile/',views.get_my_details),
+    path('user/<int:pk>',views.get_user_details),
+    path('userprofile/<int:pk>',views.get_userprofile_details),
     path('post/myposts/',views.get_my_posts),
-    path('user/getusername/',views.get_user_details),
+    path('user/getusername/',views.get_username),
     path('user/all/',views.get_all_users),
     path('post/all/',views.get_all_posts),
     # path('user/id/',views.UserProfileView.as_view(),name='create_user_profile'), # change dyn
@@ -40,6 +42,7 @@ urlpatterns = [
     path('post/delete/<int:id>',views.delete_post),
     path('post/userid/<int:pk>',views.user_post),
     path('post/like/<int:pk>',views.like_post),
+    path('post/getimages/<int:pk>',views.get_post_images),
     # path('post/upload',views.AzureUpload.as_view()),
 ]
 

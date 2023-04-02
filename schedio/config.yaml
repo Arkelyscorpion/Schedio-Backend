@@ -1,0 +1,3 @@
+azure_storage_connectionstring: "DefaultEndpointsProtocol=https;AccountName=krishnasameerstorage;AccountKey=iJeQ6cI62L6/li+u9YsKXRjYBqg/6KxDr7rqU+M0T69ChYiqoY2NlDwUENr8ia+kx1SIxypG4p70+AStJXr2Rg==;EndpointSuffix=core.windows.net"
+container_name: "questionmark"
+source_folder: "\\"

@@ -64,10 +64,10 @@ def create_user_profile(request):
 def get_my_details(request):
     user = request.user
     if user.is_authenticated:
-        username = user.username
-        print(username)
+        user_id = user.id
+        print(user_id)
         # userObjec = UserProfile.objects.all().filter(username = username)
-        userObjec = UserProfile.objects.get(username=username)
+        userObjec = UserProfile.objects.get(user_id=user_id)
         userObjec = UserProfileSerializer(userObjec)
         return JsonResponse(userObjec.data,safe=False)
 
@@ -75,17 +75,17 @@ def get_my_details(request):
 def get_my_posts(request):
     user = request.user
     if user.is_authenticated:
-        username = user.username
-        userid = UserProfileSerializer(UserProfile.objects.get(username=username))
-        userid = userid.data["id"]
-        posts = UserPostSerializer(UserPost.objects.all().filter(user_id = userid),many=True)
+        userid = user.id
+        print(userid)
+        posts=UserPostSerializer(UserPost.objects.all().filter(user=userid),many=True)
         return JsonResponse(posts.data,safe=False)
+    
 
 
 @api_view(['GET'])
 def get_all_users(request):
-    objects = UserProfile.objects.all()
-    jsondata = UserProfileSerializer(objects,many=True)
+    objects = User.objects.all()
+    jsondata = UserSerializer(objects,many=True)
     return JsonResponse(jsondata.data,safe=False,status=status.HTTP_200_OK)
 
 @api_view(['GET'])
@@ -125,7 +125,7 @@ def user_post(request,pk):
     return JsonResponse(obj.data,safe=False,status=200)
 
 @api_view(['GET'])
-def get_user_details(request):
+def get_username(request):
     user = request.user
     if user.is_authenticated:
         return JsonResponse({"username" : user.username},safe=False)
@@ -163,6 +163,24 @@ def like_post(request,pk):
         post.likes.add(request.user)
     return Response(status=200)
     
+
+@api_view(['GET'])
+def get_user_details(request,pk):
+    userobj = UserSerializer(User.objects.get(id=pk))
+    return JsonResponse(userobj.data,safe=False)
+
+
+@api_view(['GET'])
+def get_userprofile_details(request,pk):
+    profile = UserProfile.objects.get(user=pk)
+    obj = UserProfileSerializer(profile)
+    return JsonResponse(obj.data,safe=False)
+
+
+@api_view(['GET'])
+def get_post_images(request,pk):
+    images = ImageUrlSerializer(ImageUrlsForPost.objects.filter(post_id=pk),many=True)
+    return JsonResponse(images.data,safe=False)
 class registerPage(APIView):
     def post(self, request):
         username = request.data["username"]

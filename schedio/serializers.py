@@ -29,14 +29,69 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+# class UserProfileSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = UserProfile
+#         fields = '__all__'
+
+# class UserPostSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = UserPost
+#         fields = '__all__'
+
+
+class TechStackForPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TechStackForPost
+        fields = '__all__'
+
+class TechStackForUserSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = TechStackForUser
+        fields = '__all__'
+
+class ImageUrlSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageUrlsForPost
+        fields = '__all__'
+
+class TechStackSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = TechStackList
+        fields = ('tech_name',)
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id','username','first_name','last_name','email')
+
 class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
         fields = '__all__'
 
-class UserPostSerializer(serializers.ModelSerializer):
+# class UserDetailsSerializer(serializers.ModelSerializer): # Serializes all the detials of user and userprofile, nested JSON
+#     user = UserSerializer(required=True)
+    
+#     def create(self,validated_data):
+#         user_data = valid
 
+
+class UserPostSerializer(serializers.ModelSerializer):
+    
+    
+    post_tech_stack = TechStackForPostSerializer(required=False,many=True)
     class Meta:
         model = UserPost
         fields = '__all__'
+
+
+    

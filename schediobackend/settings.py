@@ -83,17 +83,23 @@ WSGI_APPLICATION = "schediobackend.wsgi.application"
 #     'PORT' : '5432',
 #     }
 # }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'schediofin',
+#         'USER': 'schedio',
+#         'PASSWORD': 'arkely@BE123',
+#         'HOST': 'schedio-server.postgres.database.azure.com',
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'schedio',
-        'USER': 'schedio',
-        'PASSWORD': 'arkely@BE123',
-        'HOST': 'schedio-server.postgres.database.azure.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -144,3 +150,11 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOWED_ORIGINS=['http://localhost:4200']
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'krishnasameer@student.tce.edu'
+EMAIL_HOST_PASSWORD = 'Ganges&Godavari'
+
