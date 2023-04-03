@@ -212,6 +212,11 @@ def get_post_images(request,pk):
     return JsonResponse(images.data,safe=False)
 
 @api_view(['GET'])
+def get_all_userprofile(request):
+    objs = UserProfileSerializer(UserProfile.objects.all(),many=True)
+    return JsonResponse(objs.data,safe=False)
+
+@api_view(['GET'])
 def get_userinfo_from_token(request):
     user = request.user
     if user.is_authenticated:
