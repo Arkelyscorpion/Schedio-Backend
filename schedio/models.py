@@ -41,7 +41,7 @@ class UserProfile(models.Model):
     tech_stack = models.ManyToManyField(TechStackList,blank=True)
 
     def __str__(self):
-        return self.user_bio
+        return self.country
     
 
 class TechStackForUser(models.Model):

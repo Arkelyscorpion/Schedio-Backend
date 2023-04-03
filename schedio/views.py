@@ -53,12 +53,41 @@ def does_user_exist(request):
 
 @api_view(['POST'])
 def create_user_profile(request):
-    serializer = UserProfileSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        serializer.save()
-        return Response(status=status.HTTP_202_ACCEPTED)
-    else:
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    userdata = request.data.copy()
+    userobj = User.objects.get(username = userdata["username"])
+    tech_stack_list = request.data["tech_stack"]
+    del userdata["tech_stack"]
+    print(tech_stack_list)
+    tech_stack_list = tech_stack_list.split(',')
+    print(tech_stack_list)
+    tech_stack_ids = TechStackList.objects.filter(tech_name__in=tech_stack_list)
+    tids = []
+    for item in tech_stack_ids:
+        userdata["tech_stack"] = item.id
+        tids.append(item.id)
+    print(tids)
+    userobj.email = request.data["email"]
+    userobj.first_name = request.data["first_name"]
+    userobj.last_name = request.data["last_name"]
+    userobj.save()
+    del userdata["email"]
+    del userdata["first_name"]
+    del userdata["last_name"]
+    userdata["user"] = userobj.id
+    # userdata["tech_stack"] = tids
+    print(userdata)
+    obj = UserProfile()
+    obj.user = userobj
+    obj.dob = request.data["dob"]
+    obj.user_gender = request.data["user_gender"]
+    obj.country = request.data["country"]
+    obj.profession = request.data["profession"]
+    obj.organisation = request.data["organisation"]
+    obj.save()
+    for items in tech_stack_ids:
+        obj.tech_stack.add(items)
+    obj.save()
+    return Response(status=200)
 
 @api_view(['GET'])
 def get_my_details(request):
