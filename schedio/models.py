@@ -82,7 +82,7 @@ class UserPost(models.Model):
     post_description = models.TextField(max_length=3000)
     time_created = models.DateTimeField(auto_now=False,auto_now_add=True)
     last_edit = models.DateTimeField(auto_now=True)
-    likes = models.ManyToManyField(User,related_name='post_like')
+    likes = models.ManyToManyField(User,related_name='liked_posts')
     tech_stack = models.ManyToManyField(TechStackList,related_name='tech_stack',blank=True)
     collaboraters = models.ManyToManyField(User,related_name='collaboraters')
     status = models.CharField(max_length=50)

@@ -242,6 +242,19 @@ def get_userinfo_from_token(request):
         userid = user.id
         userobj = UserSerializer(User.objects.get(id=userid))
         return JsonResponse(userobj.data,safe=False)
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['GET'])
+def get_liked_posts(request): #gets liked posts of a user when token is given
+    user = request.user
+    if user.is_authenticated:
+        postsobj = UserPostSerializer(user.liked_posts.all(),many=True)
+        return JsonResponse(postsobj.data,safe=False)
+    else:
+        return Response(status=401)
+
 class registerPage(APIView):
     def post(self, request):
         username = request.data["username"]
