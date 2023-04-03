@@ -39,6 +39,9 @@ class UserProfile(models.Model):
     profession = models.CharField(max_length=50)
     organisation = models.CharField(max_length=200,blank=True)
     tech_stack = models.ManyToManyField(TechStackList,blank=True)
+    linkedin = models.URLField(blank=True, null=True)
+    github = models.URLField(blank=True, null=True)
+    phone = PhoneNumberField(null=True, blank=True, unique=True)
 
     def __str__(self):
         return self.user.username 
@@ -82,6 +85,8 @@ class UserPost(models.Model):
     likes = models.ManyToManyField(User,related_name='post_like')
     tech_stack = models.ManyToManyField(TechStackList,related_name='tech_stack',blank=True)
     collaboraters = models.ManyToManyField(User,related_name='collaboraters')
+    status = models.CharField(max_length=50)
+
     def number_of_likes(self):
         return self.likes.count()
     

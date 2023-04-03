@@ -83,6 +83,7 @@ def create_user_profile(request):
     obj.country = request.data["country"]
     obj.profession = request.data["profession"]
     obj.organisation = request.data["organisation"]
+    obj.phone = request.data["phone_number"]
     obj.save()
     for items in tech_stack_ids:
         obj.tech_stack.add(items)
@@ -124,12 +125,30 @@ def get_all_posts(request):
 
 @api_view(['POST'])
 def create_new_post(request):
-    serializer = UserPostSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        serializer.save()
-        return Response(status=status.HTTP_200_OK)
-    else:
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    print(request.data)
+    obj = UserPost()
+    tech_stack_list = request.data["tech_stack"]
+    tech_stack_list = tech_stack_list.split(',')
+    tech_stack_ids = TechStackList.objects.filter(tech_name__in=tech_stack_list)
+    obj.user = User.objects.get(id=request.data["user_id"])
+    obj.post_title = request.data["post_title"]
+    obj.post_gist = request.data["post_gist"]
+    obj.post_description = request.data["post_description"]
+    obj.save()
+    obj.tech_stack.set(tech_stack_ids)
+    obj.save()
+    colab_list = request.data["collaboraters"]
+    colab_list = colab_list.split(',')
+    colabs = User.objects.filter(id__in=colab_list)
+    obj.collaboraters.set(colabs)
+    obj.save()
+    return Response(status=202)
+    # serializer = UserPostSerializer(data=request.data)
+    # if serializer.is_valid(raise_exception=True):
+    #     serializer.save()
+    #     return Response(status=status.HTTP_200_OK)
+    # else:
+    #     return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 def serialize_user(user):
