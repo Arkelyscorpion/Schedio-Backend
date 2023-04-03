@@ -33,6 +33,7 @@ urlpatterns = [
     path('post/myposts/',views.get_my_posts),
     path('user/getusername/',views.get_username),
     path('user/getlikedposts/',views.get_liked_posts),
+    path('post/userlike/<int:pk>',views.post_liked_by_user),
     path('user/all/',views.get_all_users),
     path('userprofile/all',views.get_all_userprofile),
     path('post/all/',views.get_all_posts),

@@ -254,6 +254,17 @@ def get_liked_posts(request): #gets liked posts of a user when token is given
         return JsonResponse(postsobj.data,safe=False)
     else:
         return Response(status=401)
+@api_view(['GET'])
+def post_liked_by_user(request,pk):
+    user = request.user
+    if user.is_authenticated:
+        postobj = UserPost.objects.get(id=pk)
+        if postobj in user.liked_posts.all():
+            return JsonResponse({"liked" : True},safe=False)
+        else:
+            return JsonResponse({"liked":False},safe=False)
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 class registerPage(APIView):
     def post(self, request):
