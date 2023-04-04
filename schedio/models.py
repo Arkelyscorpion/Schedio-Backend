@@ -76,7 +76,7 @@ class TechStackForUser(models.Model):
 
 class UserPost(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    file = models.FileField(blank=False,null=False)
+    file = models.ImageField(upload_to='post_photos',blank=True)
     post_title = models.CharField(max_length=100)
     post_gist = models.CharField(max_length=250)
     post_description = models.TextField(max_length=3000)

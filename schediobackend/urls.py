@@ -18,6 +18,8 @@ from django.urls import path
 from .views import homePage
 from schedio import views
 from knox import views as knox_views
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls,name='admin'),
     path('user/register/', views.register_user,name='register'),
@@ -37,6 +39,7 @@ urlpatterns = [
     path('user/all/',views.get_all_users),
     path('userprofile/all',views.get_all_userprofile),
     path('post/all/',views.get_all_posts),
+    path('post/getstacknames',views.get_stack_names),
     # path('user/id/',views.UserProfileView.as_view(),name='create_user_profile'), # change dyn
     path('post/userid/',views.UserPostView.as_view()), #create dyn
     path('post/newpost/',views.create_new_post),
@@ -48,6 +51,6 @@ urlpatterns = [
     path('post/like/<int:pk>',views.like_post),
     path('post/getimages/<int:pk>',views.get_post_images),
     # path('post/upload',views.AzureUpload.as_view()),
-]
+] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 
 
 # send post id to get post

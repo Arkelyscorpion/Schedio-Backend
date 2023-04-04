@@ -18,6 +18,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.auth import AuthToken, TokenAuthentication
 from .serializers import *
 from .models import *
+import json
 from django.views.generic import (CreateView,DeleteView,ListView,UpdateView,DetailView)
 
 @api_view(['POST'])
@@ -118,9 +119,52 @@ def get_all_users(request):
     jsondata = UserSerializer(objects,many=True)
     return JsonResponse(jsondata.data,safe=False,status=status.HTTP_200_OK)
 
+
+def post_serializer_json(post):
+    return {
+        "id" : post.id,
+        "user_id" : str(post.user),
+        "file" : str(post.file),
+        "post_title" : post.post_title,
+        "post_gist" : post.post_gist,
+        "post_description" : post.post_description,
+        "time_created" : post.time_created,
+        "last_edit" : post.last_edit,
+        "likes" : str(post.likes),
+        "tech_stack" : str(post.tech_stack),
+        "collaboraters" : str(post.collaboraters),
+        "status" : post.status,
+    }
+
+# def get_stack_name(ids):
+
+
+@api_view(['GET'])
+def get_stack_names(request):
+    l = request.data["tech_stack"]
+    objs = TechStackSerializer(TechStackList.objects.filter(id__in=l),many=True)
+    return JsonResponse(objs.data,safe=False)
+    return Response(status=200)
+
 @api_view(['GET'])
 def get_all_posts(request):
     posts = UserPostSerializer(UserPost.objects.all(),many=True)
+    # ?x = json.loads(UserPost.objects.all())
+    # print(x)
+    # l = []
+    # for items in posts:
+    #     l.append(post_serializer_json(items))
+    # print(l)
+    # # y = list(UserPost.objects.all().values())
+    # # print(y)
+    # # x = JsonResponse({"data":y})
+    # # print(x)
+    # # x = []
+    # # for items in y:
+    # #     print(post_serializer_json(items))
+    # # print(x)
+    # return JsonResponse({"data" : l},safe=False)
+    # return Response(status=200)
     return JsonResponse(posts.data,safe=False,status=status.HTTP_200_OK)
 
 @api_view(['POST'])
@@ -137,6 +181,7 @@ def create_new_post(request):
     obj.save()
     obj.tech_stack.set(tech_stack_ids)
     obj.save()
+    obj.file = request.data["file"]
     colab_list = request.data["collaboraters"]
     colab_list = colab_list.split(',')
     colabs = User.objects.filter(id__in=colab_list)

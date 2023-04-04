@@ -63,7 +63,7 @@ class TechStackSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = TechStackList
-        fields = ('tech_name',)
+        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):
