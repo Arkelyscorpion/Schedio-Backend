@@ -217,6 +217,7 @@ def create_new_post(request):
     obj.post_title = request.data["post_title"]
     obj.post_gist = request.data["post_gist"]
     obj.post_description = request.data["post_description"]
+    obj.status = request.data["status"]
     obj.save()
     obj.tech_stack.set(tech_stack_ids)
     obj.save()
