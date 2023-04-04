@@ -162,7 +162,10 @@ def get_stack_names(request):
 
 @api_view(['GET'])
 def get_all_posts(request):
-    posts = UserPostSerializer(UserPost.objects.all(),many=True)
+    posts = UserPost.objects.all()
+    qs = posts.order_by('-time_created')
+    posts = UserPostSerializer(qs,many=True)
+
     # ?x = json.loads(UserPost.objects.all())
     # print(x)
     # l = []
@@ -231,17 +234,20 @@ def create_new_post(request):
     colabs = User.objects.filter(id__in=colab_list)
     obj.collaboraters.set(colabs)
     obj.save()
-    fileobj = request.data["file"]
-    print(fileobj.name)
-    config = load_config()
-    x = str(obj.file).split('/')
-    link = upload(fileobj.name, settings.MEDIA_ROOT+'\\' +
-                  x[0] + '\\' + x[1], config["azure_storage_connectionstring"], config["container_name"])
-    print(settings.MEDIA_ROOT+'\\' + x[0] +'\\' + x[1])
-    print(obj.file)
-    print(link)
-    obj.image_url = link
-    obj.save()
+    try:
+        fileobj = request.data["file"]
+        print(fileobj.name)
+        config = load_config()
+        x = str(obj.file).split('/')
+        link = upload(fileobj.name, settings.MEDIA_ROOT+'\\' +
+                    x[0] + '\\' + x[1], config["azure_storage_connectionstring"], config["container_name"])
+        print(settings.MEDIA_ROOT+'\\' + x[0] +'\\' + x[1])
+        print(obj.file)
+        print(link)
+        obj.image_url = link
+        obj.save()
+    except:
+        return Response(status=202)
     return Response(status=202)
     # serializer = UserPostSerializer(data=request.data)
     # if serializer.is_valid(raise_exception=True):
