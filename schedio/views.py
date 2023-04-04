@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from azure.storage.blob import ContainerClient
 import os
+from django.utils.safestring import mark_safe
 from knox.auth import AuthToken
 from rest_framework import status
 from .forms import CreateUserForm
@@ -93,6 +94,15 @@ def create_user_profile(request):
     for items in tech_stack_ids:
         obj.tech_stack.add(items)
     obj.save()
+    obj.file = request.data["file"]
+    obj.save()
+    fileobj = request.data["file"]
+    config = load_config()
+    x = str(obj.file).split('/')
+    link = upload(fileobj.name, settings.MEDIA_ROOT+'\\' +
+                  x[0] + '\\' + x[1], config["azure_storage_connectionstring"], config["container_name"])
+    obj.image_url = link
+    obj.save()
     return Response(status=200)
 
 @api_view(['GET'])
@@ -169,6 +179,13 @@ def get_all_posts(request):
     # # print(x)
     # return JsonResponse({"data" : l},safe=False)
     # return Response(status=200)
+    # posts = UserPost.objects.get(id=9)
+    # techs = TechStackList.objects.get(id=1)
+    # data = {
+    #     'posts' : posts.collaboraters,
+    #     'techs' : techs
+    # }
+    # data = mark_safe(json.dumps(data))
     return JsonResponse(posts.data,safe=False,status=status.HTTP_200_OK)
 
 
