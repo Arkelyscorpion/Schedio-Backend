@@ -32,7 +32,8 @@ class TechStackList(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,null=True)
     user_bio = models.TextField(max_length=500,blank=True)
-    profile_photo = models.URLField(blank=True)
+    profile_photo = models.URLField(
+        default='https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png')
     dob = models.DateField(blank=True)
     user_gender = models.CharField(max_length=40)
     country = models.CharField(max_length=40)
@@ -86,6 +87,7 @@ class UserPost(models.Model):
     tech_stack = models.ManyToManyField(TechStackList,related_name='tech_stack',blank=True)
     collaboraters = models.ManyToManyField(User,related_name='collaboraters')
     status = models.CharField(max_length=50)
+    image_url = models.URLField(blank=True,null=True)
 
     def number_of_likes(self):
         return self.likes.count()

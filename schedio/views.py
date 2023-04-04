@@ -9,6 +9,8 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from azure.storage.blob import ContainerClient
+import os
 from knox.auth import AuthToken
 from rest_framework import status
 from .forms import CreateUserForm
@@ -18,7 +20,9 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.auth import AuthToken, TokenAuthentication
 from .serializers import *
 from .models import *
+import yaml
 import json
+from django.conf import settings
 from django.views.generic import (CreateView,DeleteView,ListView,UpdateView,DetailView)
 
 @api_view(['POST'])
@@ -167,12 +171,30 @@ def get_all_posts(request):
     # return Response(status=200)
     return JsonResponse(posts.data,safe=False,status=status.HTTP_200_OK)
 
+
+def load_config():
+    dir_root = os.path.dirname(os.path.abspath(__file__))
+    with open(dir_root + '/config.yaml', 'r') as yamlfile:
+        return yaml.load(yamlfile, Loader=yaml.FullLoader)
+
+
+def upload(file, path, connection_string, container_name):
+    container_client = ContainerClient.from_connection_string(
+        connection_string, container_name)
+    print("uploading")
+    blob_client = container_client.get_blob_client(file)
+    with open(path, "rb") as data:
+        blob_client.upload_blob(data)
+        print("done")
+        return blob_client.url
+    
 @api_view(['POST'])
 def create_new_post(request):
     print(request.data)
     obj = UserPost()
     tech_stack_list = request.data["tech_stack"]
     tech_stack_list = tech_stack_list.split(',')
+    print(tech_stack_list)
     tech_stack_ids = TechStackList.objects.filter(tech_name__in=tech_stack_list)
     obj.user = User.objects.get(id=request.data["user_id"])
     obj.post_title = request.data["post_title"]
@@ -184,8 +206,23 @@ def create_new_post(request):
     obj.file = request.data["file"]
     colab_list = request.data["collaboraters"]
     colab_list = colab_list.split(',')
+    print(colab_list)
+    print(settings.MEDIA_ROOT + '\post_photos')
+    print(settings.MEDIA_URL)
+    print(settings.BASE_DIR)
     colabs = User.objects.filter(id__in=colab_list)
     obj.collaboraters.set(colabs)
+    obj.save()
+    fileobj = request.data["file"]
+    print(fileobj.name)
+    config = load_config()
+    x = str(obj.file).split('/')
+    link = upload(fileobj.name, settings.MEDIA_ROOT+'\\' +
+                  x[0] + '\\' + x[1], config["azure_storage_connectionstring"], config["container_name"])
+    print(settings.MEDIA_ROOT+'\\' + x[0] +'\\' + x[1])
+    print(obj.file)
+    print(link)
+    obj.image_url = link
     obj.save()
     return Response(status=202)
     # serializer = UserPostSerializer(data=request.data)
