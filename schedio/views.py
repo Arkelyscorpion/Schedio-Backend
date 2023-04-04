@@ -139,7 +139,7 @@ def post_serializer_json(post):
 # def get_stack_name(ids):
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def get_stack_names(request):
     l = request.data["tech_stack"]
     objs = TechStackSerializer(TechStackList.objects.filter(id__in=l),many=True)
