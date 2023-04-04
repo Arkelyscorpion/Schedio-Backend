@@ -94,15 +94,18 @@ def create_user_profile(request):
     for items in tech_stack_ids:
         obj.tech_stack.add(items)
     obj.save()
-    obj.file = request.data["file"]
-    obj.save()
-    fileobj = request.data["file"]
-    config = load_config()
-    x = str(obj.file).split('/')
-    link = upload(fileobj.name, settings.MEDIA_ROOT+'\\' +
-                  x[0] + '\\' + x[1], config["azure_storage_connectionstring"], config["container_name"])
-    obj.image_url = link
-    obj.save()
+    try:
+        obj.file = request.data["file"]
+        obj.save()
+        fileobj = request.data["file"]
+        config = load_config()
+        x = str(obj.file).split('/')
+        link = upload(fileobj.name, settings.MEDIA_ROOT+'\\' +
+                    x[0] + '\\' + x[1], config["azure_storage_connectionstring"], config["container_name"])
+        obj.image_url = link
+        obj.save()
+    except:
+        return Response(status=200)
     return Response(status=200)
 
 @api_view(['GET'])
