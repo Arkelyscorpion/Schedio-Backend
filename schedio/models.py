@@ -31,7 +31,7 @@ class TechStackList(models.Model):
 #         return self.username
 class UserProfile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,null=True)
-    file = models.ImageField(upload_to='profile_photos', blank=True)
+    file = models.ImageField(upload_to='profile_photos', blank=True,null=True)
     user_bio = models.TextField(max_length=500,blank=True)
     image_url = models.URLField(
         default='https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png')
