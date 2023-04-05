@@ -57,44 +57,6 @@ def does_user_exist(request):
         flag = True
     return Response({"user_exists": flag}, status=status.HTTP_200_OK)
 
-
-@api_view(['PUT'])
-def edit_user_profile(request):
-    # userdata = request.data.copy()
-    userprofileobj = UserProfile.objects.get(username=request.data["username"])
-    userprofileobj.user_bio = request.data["user_bio"]
-    userprofileobj.dob = request.data["dob"]
-    userprofileobj.user_gender = request.data["user_gender"]
-    userprofileobj.country = request.data["country"]
-    userprofileobj.profession = request.data["profession"]
-    userprofileobj.organisation = request.data["organisation"]
-    userprofileobj.phone = request.data["phone_number"]
-    userprofileobj.linkedin = request.data["linkedin"]
-    userprofileobj.github = request.data["github"]
-    userprofileobj.save()
-    tech_stack_list = request.data["tech_stack"]
-    tech_stack_list = tech_stack_list.split(',')
-    tech_stack_ids = TechStackList.objects.filter(
-        tech_name__in=tech_stack_list)
-    for items in tech_stack_ids:
-        userprofileobj.tech_stack.add(items)
-    userprofileobj.save()
-    try:
-        userprofileobj.file = request.data["file"]
-        userprofileobj.save()
-        fileobj = request.data["file"]
-        config = load_config()
-        x = str(userprofileobj.file).split('/')
-        link = upload(fileobj.name, settings.MEDIA_ROOT+'\\' +
-                      x[0] + '\\' + x[1], config["azure_storage_connectionstring"], config["container_name"])
-        userprofileobj.image_url = link
-        userprofileobj.save()
-    except:
-        return JsonResponse({"status" : "failed to add profile photo"},status=status.HTTP_202_ACCEPTED)
-    return Response(status=status.HTTP_202_ACCEPTED)
-
-
-
 @api_view(['POST'])
 def create_user_profile(request):
     userdata = request.data.copy()
@@ -248,49 +210,7 @@ def upload(file, path, connection_string, container_name):
         blob_client.upload_blob(data)
         print("done")
         return blob_client.url
-
-@api_view(['PUT'])
-def edit_user_post(request):
-
-    postobj = UserPost.objects.get(id=request.data["id"])
-    # UserPost.objects.get(id=request.data["id"]).update(data=request.data)
     
-    print(postobj.id)
-    print(postobj.post_title)
-    postobj.post_title = request.data["post_title"]
-    postobj.post_gist = request.data["post_gist"]
-    postobj.post_description = request.data["post_description"]
-    postobj.status = request.data["status"]
-    postobj.save()
-    tech_stack_list = request.data["tech_stack"]
-    tech_stack_list = tech_stack_list.split(',')
-    tech_stack_ids = TechStackList.objects.filter(
-        tech_name__in=tech_stack_list)
-    postobj.tech_stack.set(tech_stack_ids)
-    postobj.save()
-    colab_list = request.data["collaboraters"]
-    colab_list = colab_list.split(',')
-    colabs = User.objects.filter(id__in=colab_list)
-    postobj.collaboraters.set(colabs)
-    postobj.save()
-    try:
-        fileobj = request.data["file"]
-        print(fileobj.name)
-        config = load_config()
-        x = str(postobj.file).split('/')
-        link = upload(fileobj.name, settings.MEDIA_ROOT+'\\' +
-                      x[0] + '\\' + x[1], config["azure_storage_connectionstring"], config["container_name"])
-        print(settings.MEDIA_ROOT+'\\' + x[0] + '\\' + x[1])
-        print(postobj.file)
-        print(link)
-        postobj.image_url = link
-        postobj.save()
-    except:
-        return JsonResponse({"status" : "failed to upload photo"},status=status.HTTP_200_OK)
-    # postobj.data = request.data
-    # postobj.save()
-    return Response(status=202)
-
 @api_view(['POST'])
 def create_new_post(request):
     print(request.data)
@@ -338,7 +258,6 @@ def create_new_post(request):
     #     return Response(status=status.HTTP_200_OK)
     # else:
     #     return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
-
 
 
 def serialize_user(user):
