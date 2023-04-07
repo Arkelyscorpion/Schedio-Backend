@@ -50,6 +50,8 @@ urlpatterns = [
     path('post/userid/<int:pk>',views.user_post),
     path('post/like/<int:pk>',views.like_post),
     path('post/getimages/<int:pk>',views.get_post_images),
+    path('post/edit/',views.edit_user_post),
+    path('user/editprofile/',views.edit_user_profile),
     # path('post/upload',views.AzureUpload.as_view()),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 
 
