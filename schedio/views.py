@@ -163,7 +163,7 @@ def get_my_posts(request):
     if user.is_authenticated:
         userid = user.id
         print(userid)
-        posts=UserPostSerializer(UserPost.objects.all().filter(user=userid),many=True)
+        posts=UserPostSerializerV2(UserPost.objects.all().filter(user=userid),many=True)
         return JsonResponse(posts.data,safe=False)
     
 
@@ -205,7 +205,7 @@ def get_stack_names(request):
 def get_all_posts(request):
     posts = UserPost.objects.all()
     qs = posts.order_by('-time_created')
-    posts = UserPostSerializer(qs,many=True)
+    posts = UserPostSerializerV2(qs,many=True)
 
     # ?x = json.loads(UserPost.objects.all())
     # print(x)
@@ -353,13 +353,13 @@ def serialize_user(user):
 @api_view(['GET'])
 def UserPostDetailView(request,pk):
     queryset = UserPost.objects.all().filter(id=pk)
-    obj = UserPostSerializer(queryset,many=True)
+    obj = UserPostSerializerV2(queryset,many=True)
     return JsonResponse(obj.data,safe=False,status=200)
 
 @api_view(['GET'])
 def user_post(request,pk):
     queryset = UserPost.objects.filter(user_id = pk)
-    obj = UserPostSerializer(queryset,many =True)
+    obj = UserPostSerializerV2(queryset,many =True)
     return JsonResponse(obj.data,safe=False,status=200)
 
 @api_view(['GET'])
@@ -440,7 +440,7 @@ def get_userinfo_from_token(request):
 def get_liked_posts(request): #gets liked posts of a user when token is given
     user = request.user
     if user.is_authenticated:
-        postsobj = UserPostSerializer(user.liked_posts.all(),many=True)
+        postsobj = UserPostSerializerV2(user.liked_posts.all(),many=True)
         return JsonResponse(postsobj.data,safe=False)
     else:
         return Response(status=401)
@@ -455,6 +455,13 @@ def post_liked_by_user(request,pk):
             return JsonResponse({"liked":False},safe=False)
     else:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+@api_view(['GET'])
+def get_all_posts_v2(request):
+    objs = UserPostSerializerV2(UserPost.objects.all(),many=True)
+    return JsonResponse(objs.data,safe=False)
 
 class registerPage(APIView):
     def post(self, request):

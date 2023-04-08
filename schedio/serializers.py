@@ -63,7 +63,7 @@ class TechStackSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = TechStackList
-        fields = '__all__'
+        fields = ('tech_name',)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -93,5 +93,15 @@ class UserPostSerializer(serializers.ModelSerializer):
         model = UserPost
         fields = '__all__'
 
+class TechStackListingField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.tech_name
+
+class UserPostSerializerV2(serializers.ModelSerializer):
+    # tech_stacks = serializers.CharSerializer()
+    tech_stack=TechStackListingField(many=True,read_only=True)
+    class Meta:
+        model = UserPost
+        fields = '__all__'
 
     
