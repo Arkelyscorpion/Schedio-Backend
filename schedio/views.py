@@ -61,16 +61,21 @@ def does_user_exist(request):
 @api_view(['PUT'])
 def edit_user_profile(request):
     # userdata = request.data.copy()
-    userprofileobj = UserProfile.objects.get(username=request.data["username"])
-    userprofileobj.user_bio = request.data["user_bio"]
+    obj = User.objects.get(username=request.data["username"])
+    obj.first_name = request.data["first_name"]
+    obj.last_name = request.data["last_name"]
+    print(request.data["last_name"])
+    obj.save()
+    userprofileobj = UserProfile.objects.get(user=obj)
+    # userprofileobj.user_bio = request.data["user_bio"]
     userprofileobj.dob = request.data["dob"]
     userprofileobj.user_gender = request.data["user_gender"]
     userprofileobj.country = request.data["country"]
     userprofileobj.profession = request.data["profession"]
     userprofileobj.organisation = request.data["organisation"]
     userprofileobj.phone = request.data["phone_number"]
-    userprofileobj.linkedin = request.data["linkedin"]
-    userprofileobj.github = request.data["github"]
+    # userprofileobj.linkedin = request.data["linkedin"]
+    # userprofileobj.github = request.data["github"]
     userprofileobj.save()
     tech_stack_list = request.data["tech_stack"]
     tech_stack_list = tech_stack_list.split(',')
@@ -273,20 +278,6 @@ def edit_user_post(request):
     colabs = User.objects.filter(id__in=colab_list)
     postobj.collaboraters.set(colabs)
     postobj.save()
-    try:
-        fileobj = request.data["file"]
-        print(fileobj.name)
-        config = load_config()
-        x = str(postobj.file).split('/')
-        link = upload(fileobj.name, settings.MEDIA_ROOT+'\\' +
-                      x[0] + '\\' + x[1], config["azure_storage_connectionstring"], config["container_name"])
-        print(settings.MEDIA_ROOT+'\\' + x[0] + '\\' + x[1])
-        print(postobj.file)
-        print(link)
-        postobj.image_url = link
-        postobj.save()
-    except:
-        return JsonResponse({"status" : "failed to upload photo"},status=status.HTTP_200_OK)
     # postobj.data = request.data
     # postobj.save()
     return Response(status=202)
